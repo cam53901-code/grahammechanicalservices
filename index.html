@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graham Mechanical Services Inc. | Professional GTA Plumbing & Gas</title>
+    
+    <!-- Meta Tags for Google & Social Media -->
+    <meta name="description" content="Graham Mechanical Services Inc. - Licensed Journeyman Plumber & G2 Technician specializing in commercial mechanical services throughout the GTA.">
+    <meta property="og:title" content="Graham Mechanical Services Inc. | GTA Plumbing & Gas">
+    <meta property="og:description" content="Expert commercial and residential plumbing and gas services in the Greater Toronto Area. Licensed and insured.">
+    <meta property="og:image" content="brand_assets/graham_logo.png">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="brand_assets/graham_logo.png">
+
+    <!-- Styles -->
+    <style>
+        :root {
+            --primary-blue: #0a3d62;
+            --accent-orange: #f39c12;
+            --industrial-grey: #2c3e50;
+            --light-bg: #f4f7f6;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--industrial-grey);
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-container img {
+            height: 50px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--industrial-grey);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-orange);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(10, 61, 98, 0.8), rgba(10, 61, 98, 0.8)), url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=1920');
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+
+        .btn {
+            background: var(--accent-orange);
+            color: var(--white);
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .btn:hover {
+            background: #e67e22;
+            transform: translateY(-3px);
+        }
+
+        /* Services */
+        .services {
+            padding: 5rem 5%;
+            background: var(--white);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--light-bg);
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            transition: box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            margin: 15px 0;
+            color: var(--primary-blue);
+        }
+
+        /* Contact Form */
+        .contact-section {
+            padding: 5rem 5%;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #0d4d7d;
+        }
+
+        footer {
+            background: var(--industrial-grey);
+            color: var(--white);
+            padding: 3rem 5%;
+            text-align: center;
+        }
+
+        .footer-info {
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            nav ul { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="brand_assets/graham_logo.png" alt="Graham Mechanical Services Logo">
+        <strong>Graham Mechanical Services Inc.</strong>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="hero" id="home">
+    <h1>Quality Mechanical Solutions</h1>
+    <p>Licensed Journeyman Plumber & G2 Technician Specializing in Commercial Services Across the GTA & Surrounding Areas.</p>
+    <a href="#contact" class="btn">Request a Quote</a>
+</section>
+
+<section class="services" id="services">
+    <div class="section-title">
+        <h2>Our Expert Services</h2>
+        <p>Reliable, professional, and built for performance.</p>
+    </div>
+    <div class="grid">
+        <div class="card">
+            <h3>Commercial Plumbing</h3>
+            <p>From new builds to maintenance, we provide high-grade plumbing solutions for GTA businesses.</p>
+        </div>
+        <div class="card">
+            <h3>G2 Gas Technician</h3>
+            <p>Expert gas line installations, furnace repairs, and boiler maintenance with G2 certification.</p>
+        </div>
+        <div class="card">
+            <h3>Mechanical Renovations</h3>
+            <p>Specialized mechanical upgrades and home improvement projects with a focus on efficiency.</p>
+        </div>
+    </div>
+</section>
+
+<section class="contact-section" id="contact">
+    <div class="section-title">
+        <h2>Get In Touch</h2>
+        <p>Contact us today for a reliable estimate on your next project.</p>
+    </div>
+    <div class="contact-container">
+        <!-- Formspree Integration -->
+        <form action="https://formspree.io/f/your-id-here" method="POST">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="_replyto" required placeholder="email@example.com">
+            </div>
+            <div class="form-group">
+                <label>Service Required</label>
+                <select name="service" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px;">
+                    <option value="commercial-plumbing">Commercial Plumbing</option>
+                    <option value="gas-service">Gas / G2 Service</option>
+                    <option value="renovation">Renovation / Improvement</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea name="message" rows="5" required placeholder="Tell us about your project..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-info">
+        <p><strong>Graham Mechanical Services Inc.</strong></p>
+        <p>Serving the Greater Toronto Area & Surrounding Regions</p>
+        <p>Licensed Journeyman Plumber | G2 Technician</p>
+    </div>
+    <p>&copy; 2026 Graham Mechanical Services Inc. All rights reserved.</p>
+</footer>
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a069c5abeaa18af6',t:'MTc4MDYwNTgzMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
