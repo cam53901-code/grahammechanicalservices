@@ -241,14 +241,15 @@
         .contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(230,126,34,0.1);background:white;}
         .contact-form button{background:var(--accent);color:white;border:none;padding:16px 32px;width:100%;border-radius:50px;font-weight:700;font-size:0.95rem;cursor:pointer;transition:var(--transition);letter-spacing:0.03em;box-shadow:0 4px 20px var(--accent-glow);}
         .contact-form button:hover{background:var(--accent-hover);transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow);}
+        .contact-form button:disabled{opacity:0.6;pointer-events:none;cursor:not-allowed;}
+        .form-fields{transition:opacity 0.3s ease;}
+        .form-fields.hidden{display:none;}
         .form-success{display:none;text-align:center;padding:40px 20px;animation:fadeInUp 0.5s ease-out;}
-        .form-success.visible{display:block;}
         .form-success-icon{width:72px;height:72px;border-radius:50%;background:rgba(39,174,96,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--green);}
         .form-success h3{font-size:1.4rem;font-weight:800;color:var(--dark);margin-bottom:10px;}
         .form-success p{font-size:0.95rem;color:var(--grey-light);max-width:300px;margin:0 auto;line-height:1.6;}
-        .contact-form.submitting button{pointer-events:none;opacity:0.7;}
-        .contact-form.submitted > :not(.form-success){display:none;}
-        .contact-form.submitted .form-success{display:block;}
+        .form-success .reset-link{display:inline-block;margin-top:18px;color:var(--accent);font-size:0.85rem;font-weight:600;cursor:pointer;text-decoration:underline;transition:var(--transition);}
+        .form-success .reset-link:hover{color:var(--accent-hover);}
         .form-error{display:none;background:rgba(231,76,60,0.08);color:var(--red);padding:12px 16px;border-radius:8px;font-size:0.88rem;font-weight:600;margin-bottom:18px;border:1px solid rgba(231,76,60,0.2);}
 
         /* FOOTER */
@@ -450,23 +451,24 @@
                 <div class="contact-detail-item"><div class="cd-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><strong>Service Area</strong><span>Toronto &amp; Greater Toronto Area (GTA)</span></div></div>
             </div>
         </div>
-        <form action="https://formspree.io/f/xaqaqkpb" method="POST" class="space-y-5 bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 shadow-lg shadow-black/20">
-                        <input type="hidden" name="_subject" value="New cawda testsite Contact Form Submission">
-                        <input type="hidden" name="_replyto" value="cawdacreates@gmail.com">
-            <label for="name">Full Name</label><input type="text" id="name" placeholder="Your full name" required>
-            <label for="email">Email Address</label><input type="email" id="email" placeholder="you@company.com" required>
-            <label for="phone">Phone Number</label><input type="tel" id="phone" placeholder="(416) 555-0000">
-            <label for="service">Service Needed</label>
-            <select id="service"><option value="">Select a service&hellip;</option><option value="commercial-plumbing">Commercial Plumbing</option><option value="gas-lines">Gas Line Installation / Repair</option><option value="mechanical-reno">Mechanical Renovations</option><option value="maintenance">Preventative Maintenance</option><option value="emergency">Emergency Service</option><option value="other">Other</option></select>
-            <label for="details">Project Details</label><textarea id="details" rows="4" placeholder="Tell us about your project or issue&hellip;" required></textarea>
-            <div class="form-error" id="formError"></div>
-            <button type="submit" id="submitBtn">SEND REQUEST</button>
+        <form class="contact-form" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <div class="form-fields" id="formFields">
+                <label for="name">Full Name</label><input type="text" id="name" name="name" placeholder="Your full name" required>
+                <label for="email">Email Address</label><input type="email" id="email" name="email" placeholder="you@company.com" required>
+                <label for="phone">Phone Number</label><input type="tel" id="phone" name="phone" placeholder="(416) 555-0000">
+                <label for="service">Service Needed</label>
+                <select id="service" name="service"><option value="">Select a service&hellip;</option><option value="commercial-plumbing">Commercial Plumbing</option><option value="gas-lines">Gas Line Installation / Repair</option><option value="mechanical-reno">Mechanical Renovations</option><option value="maintenance">Preventative Maintenance</option><option value="emergency">Emergency Service</option><option value="other">Other</option></select>
+                <label for="details">Project Details</label><textarea id="details" name="details" rows="4" placeholder="Tell us about your project or issue&hellip;" required></textarea>
+                <div class="form-error" id="formError"></div>
+                <button type="submit" id="submitBtn">SEND REQUEST</button>
+            </div>
             <div class="form-success" id="formSuccess">
                 <div class="form-success-icon">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
                 <h3>Message Sent!</h3>
                 <p>Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+                <span class="reset-link" id="resetForm">Send another message</span>
             </div>
         </form>
     </div>
@@ -497,79 +499,72 @@
     var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15,rootMargin:'0px 0px -50px 0px'});
     document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el);});
 
-    /* ── Contact Form Handling (Formspree) ── */
-    /* >>> REPLACE THE FORM_ID BELOW WITH YOUR FORMSPREE FORM ID <<< */
-    var FORMSPREE_URL='https://formspree.io/f/xaqaqkpb';
+    /* ── Contact Form ── */
+    (function(){
+        var form=document.getElementById('contactForm');
+        var fields=document.getElementById('formFields');
+        var success=document.getElementById('formSuccess');
+        var error=document.getElementById('formError');
+        var btn=document.getElementById('submitBtn');
+        var resetLink=document.getElementById('resetForm');
 
-    var contactForm=document.getElementById('contactForm');
-    var formSuccess=document.getElementById('formSuccess');
-    var submitBtn=document.getElementById('submitBtn');
-    var formError=document.getElementById('formError');
+        /* >>> SET YOUR FORMSPREE FORM ID BELOW <<< */
+        var FORMSPREE_ID='xaqaqkpb';
+        var FORMSPREE_URL='https://formspree.io/f/'+FORMSPREE_ID;
+        form.setAttribute('action',FORMSPREE_URL);
 
-    contactForm.addEventListener('submit',function(e){
-        e.preventDefault();
+        form.addEventListener('submit',function(e){
+            e.preventDefault();
+            error.style.display='none';
 
-        /* Clear any previous error */
-        formError.style.display='none';
-        formError.textContent='';
+            /* Validate required fields */
+            var name=document.getElementById('name').value.trim();
+            var email=document.getElementById('email').value.trim();
+            var details=document.getElementById('details').value.trim();
+            if(!name||!email||!details){
+                error.textContent='Please fill in all required fields (Name, Email, and Project Details).';
+                error.style.display='block';
+                return;
+            }
 
-        /* Basic validation */
-        var name=document.getElementById('name').value.trim();
-        var email=document.getElementById('email').value.trim();
-        var details=document.getElementById('details').value.trim();
+            /* Submit to Formspree */
+            btn.textContent='SENDING…';
+            btn.disabled=true;
 
-        if(!name||!email||!details){
-            formError.textContent='Please fill in all required fields (Name, Email, and Project Details).';
-            formError.style.display='block';
-            return;
-        }
-
-        /* Build FormData from the form */
-        var formData=new FormData(contactForm);
-
-        /* Show sending state */
-        submitBtn.textContent='SENDING…';
-        submitBtn.disabled=true;
-        contactForm.classList.add('submitting');
-
-        /* Submit to Formspree via AJAX */
-        fetch(FORMSPREE_URL,{
-            method:'POST',
-            body:formData,
-            headers:{'Accept':'application/json'}
-        })
-        .then(function(response){
-            if(!response.ok) throw new Error('Server error');
-            return response.json();
-        })
-        .then(function(){
-            /* Success — clear the form */
-            contactForm.reset();
-
-            /* Reset button state */
-            submitBtn.textContent='SEND REQUEST';
-            submitBtn.disabled=false;
-            contactForm.classList.remove('submitting');
-
-            /* Show success message */
-            contactForm.classList.add('submitted');
-        })
-        .catch(function(err){
-            /* Error — show message and re-enable form */
-            console.error('Formspree error:',err);
-            submitBtn.textContent='SEND REQUEST';
-            submitBtn.disabled=false;
-            contactForm.classList.remove('submitting');
-            formError.textContent='Something went wrong. Please try again or call us directly.';
-            formError.style.display='block';
+            fetch(FORMSPREE_URL,{
+                method:'POST',
+                body:new FormData(form),
+                headers:{'Accept':'application/json'}
+            })
+            .then(function(res){
+                if(res.ok) return res.json();
+                throw new Error('Server responded with '+res.status);
+            })
+            .then(function(){
+                /* Success */
+                form.reset();
+                btn.textContent='SEND REQUEST';
+                btn.disabled=false;
+                fields.style.display='none';
+                success.style.display='block';
+            })
+            .catch(function(err){
+                console.error('Form error:',err);
+                btn.textContent='SEND REQUEST';
+                btn.disabled=false;
+                error.textContent='Something went wrong. Please try again or call us directly.';
+                error.style.display='block';
+            });
         });
-    });
 
-    /* Double-click the success message to send another */
-    formSuccess.addEventListener('dblclick',function(){
-        contactForm.classList.remove('submitted');
-    });
+        /* Reset: show form again, hide success */
+        resetLink.addEventListener('click',function(){
+            success.style.display='none';
+            fields.style.display='block';
+            form.reset();
+        });
+    })();
 </script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06b0b05fe018e83',t:'MTc4MDYxOTE1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06b1c2e8aed5437',t:'MTc4MDYxOTg2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
