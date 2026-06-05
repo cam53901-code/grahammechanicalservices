@@ -249,6 +249,7 @@
         .contact-form.submitting button{pointer-events:none;opacity:0.7;}
         .contact-form.submitted > :not(.form-success){display:none;}
         .contact-form.submitted .form-success{display:block;}
+        .form-error{display:none;background:rgba(231,76,60,0.08);color:var(--red);padding:12px 16px;border-radius:8px;font-size:0.88rem;font-weight:600;margin-bottom:18px;border:1px solid rgba(231,76,60,0.2);}
 
         /* FOOTER */
         footer{background:var(--dark);color:white;padding:60px 5% 40px;}
@@ -456,6 +457,7 @@
             <label for="service">Service Needed</label>
             <select id="service"><option value="">Select a service&hellip;</option><option value="commercial-plumbing">Commercial Plumbing</option><option value="gas-lines">Gas Line Installation / Repair</option><option value="mechanical-reno">Mechanical Renovations</option><option value="maintenance">Preventative Maintenance</option><option value="emergency">Emergency Service</option><option value="other">Other</option></select>
             <label for="details">Project Details</label><textarea id="details" rows="4" placeholder="Tell us about your project or issue&hellip;" required></textarea>
+            <div class="form-error" id="formError"></div>
             <button type="submit" id="submitBtn">SEND REQUEST</button>
             <div class="form-success" id="formSuccess">
                 <div class="form-success-icon">
@@ -493,13 +495,21 @@
     var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15,rootMargin:'0px 0px -50px 0px'});
     document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el);});
 
-    /* ── Contact Form Handling ── */
+    /* ── Contact Form Handling (Formspree) ── */
+    /* >>> REPLACE THE FORM_ID BELOW WITH YOUR FORMSPREE FORM ID <<< */
+    var FORMSPREE_URL='https://formspree.io/f/xaqaqkpb';
+
     var contactForm=document.getElementById('contactForm');
     var formSuccess=document.getElementById('formSuccess');
     var submitBtn=document.getElementById('submitBtn');
+    var formError=document.getElementById('formError');
 
     contactForm.addEventListener('submit',function(e){
         e.preventDefault();
+
+        /* Clear any previous error */
+        formError.style.display='none';
+        formError.textContent='';
 
         /* Basic validation */
         var name=document.getElementById('name').value.trim();
@@ -507,17 +517,31 @@
         var details=document.getElementById('details').value.trim();
 
         if(!name||!email||!details){
-            alert('Please fill in all required fields (Name, Email, and Project Details).');
+            formError.textContent='Please fill in all required fields (Name, Email, and Project Details).';
+            formError.style.display='block';
             return;
         }
 
-        /* Optional: simulate a brief send delay for UX */
+        /* Build FormData from the form */
+        var formData=new FormData(contactForm);
+
+        /* Show sending state */
         submitBtn.textContent='SENDING…';
         submitBtn.disabled=true;
         contactForm.classList.add('submitting');
 
-        setTimeout(function(){
-            /* Clear all form fields */
+        /* Submit to Formspree via AJAX */
+        fetch(FORMSPREE_URL,{
+            method:'POST',
+            body:formData,
+            headers:{'Accept':'application/json'}
+        })
+        .then(function(response){
+            if(!response.ok) throw new Error('Server error');
+            return response.json();
+        })
+        .then(function(){
+            /* Success — clear the form */
             contactForm.reset();
 
             /* Reset button state */
@@ -525,15 +549,25 @@
             submitBtn.disabled=false;
             contactForm.classList.remove('submitting');
 
-            /* Hide form fields and show success message */
+            /* Show success message */
             contactForm.classList.add('submitted');
-        },800);
+        })
+        .catch(function(err){
+            /* Error — show message and re-enable form */
+            console.error('Formspree error:',err);
+            submitBtn.textContent='SEND REQUEST';
+            submitBtn.disabled=false;
+            contactForm.classList.remove('submitting');
+            formError.textContent='Something went wrong. Please try again or call us directly.';
+            formError.style.display='block';
+        });
     });
 
-    /* Optional: reset the form if the user wants to send another message */
+    /* Double-click the success message to send another */
     formSuccess.addEventListener('dblclick',function(){
         contactForm.classList.remove('submitted');
     });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06b0370e92c8e83',t:'MTc4MDYxODg0Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06b0b05fe018e83',t:'MTc4MDYxOTE1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
